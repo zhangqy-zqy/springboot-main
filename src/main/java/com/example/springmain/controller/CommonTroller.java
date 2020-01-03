@@ -1,6 +1,7 @@
 package com.example.springmain.controller;
 
 import com.example.springloggin.common.LoginInfoCache;
+import com.example.springmain.service.CommonService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,19 +13,18 @@ import java.util.Map;
 public class CommonTroller {
 
     @Resource
-    private LoginInfoCache loginInfoCache;
-
+    public CommonService commonService;
 
 
     @RequestMapping(value = "/listdata", method = RequestMethod.GET)
-    public Map<String, String> getListData() {
-        Map<String, String> subSystemMap = loginInfoCache.getSubSystemMap();
-        System.out.println("-------------------------------");
-        System.out.println("-------------------------------");
-        System.out.println(subSystemMap.toString());
-        System.out.println("-------------------------------");
-        System.out.println("-------------------------------");
-        return subSystemMap;
+    public String getListData() {
+        String loginMap=null;
+        try {
+            loginMap = commonService.getLoginMap();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return loginMap;
     }
 
 
@@ -35,7 +35,7 @@ public class CommonTroller {
     @ResponseBody
     public boolean cancelRegister(HttpServletRequest request) {
         String product = request.getHeader("product");
-        loginInfoCache.removeSubSystemMap(product);
+        LoginInfoCache.getLoginInfoCache().removeSubSystemMap(product);
         return true;
     }
 }
